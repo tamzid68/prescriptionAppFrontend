@@ -27,6 +27,28 @@ export default function PrescriptionList() {
     }
   };
 
+  const handleApply = async () => {
+    // Read the two date inputs (safer selector using the class)
+    const inputs = Array.from(document.querySelectorAll('input[type="date"].filter-input'));
+    const fromDate = inputs[0]?.value || "";
+    const toDate = inputs[1]?.value || "";
+
+    // Build query params only for values that exist
+    const params = {};
+    if (fromDate) params.from = fromDate;
+    if (toDate) params.to = toDate;
+
+    try {
+      // Call backend with query params; the existing api helper uses axios which accepts { params }
+      const res = await api.get("/prescriptions", { params });
+      setPrescriptions(res.data || []);
+    } catch (err) {
+      console.error("Failed to fetch prescriptions for date range", err);
+      // keep UX simple for now — inform the user and leave previous data intact
+      alert("Failed to load prescriptions. Check console for details.");
+    }
+  };
+
   if (editing) {
     return (
       <div className="page-container">
@@ -60,7 +82,7 @@ export default function PrescriptionList() {
           <label className="text-muted">To</label>
           <input className="filter-input" type="date" />
         </div>
-        <button className="apply-btn">Apply</button>
+        <button className="apply-btn" onClick={handleApply}>Apply</button>
       </div>
 
       <div className="card">

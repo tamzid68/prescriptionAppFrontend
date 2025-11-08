@@ -8,6 +8,25 @@ export default function Report() {
     api.get("/prescriptions/report").then((res) => setReport(res.data || []));
   }, []);
 
+  const handleApply = async () => {
+    // Read date inputs
+    const inputs = Array.from(document.querySelectorAll('input[type="date"].filter-input'));
+    const fromDate = inputs[0]?.value || "";
+    const toDate = inputs[1]?.value || "";
+
+    const params = {};
+    if (fromDate) params.from = fromDate;
+    if (toDate) params.to = toDate;
+
+    try {
+      const res = await api.get("/prescriptions/report", { params });
+      setReport(res.data || []);
+    } catch (err) {
+      console.error("Failed to fetch report for date range", err);
+      alert("Failed to load report. Check console for details.");
+    }
+  };
+
   return (
     <div className="page-container">
       <div className="top-row">
@@ -23,12 +42,14 @@ export default function Report() {
           <label className="text-muted">To</label>
           <input className="filter-input" type="date" />
         </div>
-        <button className="apply-btn">Apply</button>
+        <button className="apply-btn" onClick={handleApply}>
+          Apply
+        </button>
       </div>
 
       <div className="card">
-        <h3 style={{marginTop:0}}>Prescription Report</h3>
-        <div style={{overflowX:'auto'}}>
+        <h3 style={{ marginTop: 0 }}>Prescription Report</h3>
+        <div style={{ overflowX: "auto" }}>
           <table className="table">
             <thead>
               <tr>
@@ -39,7 +60,13 @@ export default function Report() {
             <tbody>
               {report.length === 0 ? (
                 <tr>
-                  <td colSpan="2" style={{textAlign:'center', padding:'24px'}} className="text-muted">No report data found for the selected date range.</td>
+                  <td
+                    colSpan="2"
+                    style={{ textAlign: "center", padding: "24px" }}
+                    className="text-muted"
+                  >
+                    No report data found for the selected date range.
+                  </td>
                 </tr>
               ) : (
                 report.map((item) => (
