@@ -11,7 +11,7 @@ export default function Report() {
   return (
     <div className="page-container">
       <div className="top-row">
-        <h2 className="text-2xl font-semibold">Daily Report</h2>
+        <h2 className="page-title">Daily Report</h2>
       </div>
 
       <div className="filter-box">

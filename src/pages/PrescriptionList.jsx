@@ -47,7 +47,7 @@ export default function PrescriptionList() {
   return (
     <div className="page-container">
       <div className="top-row">
-        <h2 className="text-2xl font-semibold">Prescription List</h2>
+        <h2 className="page-title">Prescription List</h2>
         <button className="create-btn" onClick={() => setEditing({})}>+ Create New</button>
       </div>
 
